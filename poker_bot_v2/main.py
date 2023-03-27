@@ -34,8 +34,19 @@ def main():
         if not utils.exist_check(db, key):
             await ctx.send(key + ' is not found!')
             return
+        
         player:Player = utils.key_to_player(db, key)
         await ctx.send(player.get_name() + '\'s rating: ' + str(player.get_rating()) + 'pt')
+
+        emojis:str = ''
+        for i in range(player.get_medals().get_gold()):
+            emojis += ':first_place:'
+        for i in range(player.get_medals().get_silver()):
+            emojis += ':second_place:'
+        for i in range(player.get_medals().get_bronze()):
+            emojis += ':third_place:'
+        if emojis != '':
+            await ctx.send(player.get_name() + '\'s medals: ' + emojis)
 
 
     # ランキング表示
