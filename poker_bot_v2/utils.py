@@ -1,3 +1,4 @@
+import math
 from player import Player
 from medals import Medals
 
@@ -12,3 +13,12 @@ def key_to_player(db:list[Player], key:str) -> Player:
         if db[i].get_key() == key:
             return db[i]
     return None
+
+def calc_win(winner:int, loser:int) -> float:
+    return 1 / (1 + pow(10, (loser-winner)/400))
+
+def calc_lose(winner:int, loser:int) -> float:
+    return 1 / (1 + pow(10, (winner-loser)/400))
+
+def calc_rate_adds(buyin:int, winner:int, loser:int) -> float:
+    return 4 * calc_lose(winner, loser) * pow(math.log(buyin, 100), 1.5)
