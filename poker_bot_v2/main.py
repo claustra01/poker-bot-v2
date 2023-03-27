@@ -5,6 +5,7 @@ from discord.ext import commands
 
 from player import Player
 from medals import Medals
+import utils
 
 def main():
     
@@ -26,7 +27,14 @@ def main():
         db.append(player)
         await ctx.send(key + ' is registered!')
 
-    
+    @bot.command()
+    async def link(ctx, key, id):
+        player:Player = utils.key_to_player(db, key)
+        if player == None:
+            await ctx.send(key + " is not found!")
+        player.set_id(id)
+        await ctx.send(id + ' is linked!')
+
     bot.run(TOKEN)
 
 if __name__ == '__main__':
