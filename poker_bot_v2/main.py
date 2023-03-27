@@ -50,6 +50,11 @@ def main():
 
 
     # ランキング表示
+    @bot.command()
+    async def ranking(ctx, limit):
+        utils.sort_by_rating(db)
+        for i in range(min(10, int(limit), len(db))):
+            await ctx.send(db[i].get_name() + ' ' + str(db[i].get_rating()) + 'pt')
 
 
     # プレイヤー登録

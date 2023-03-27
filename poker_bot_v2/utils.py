@@ -29,3 +29,9 @@ def calc_lose(winner:int, loser:int) -> float:
 
 def calc_rate_adds(stack:int, winner:int, loser:int) -> float:
     return 4 * calc_lose(winner, loser) * pow(math.log(stack, 100), 1.5)
+
+def sort_by_rating(db:list[Player]):
+    for i in range(len(db)-1):
+        for j in range(i+1, len(db)):
+            if db[i].get_rating() < db[j].get_rating():
+                db[i], db[j] = db[j], db[i]
