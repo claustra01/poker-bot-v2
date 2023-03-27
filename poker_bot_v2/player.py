@@ -15,7 +15,7 @@ class Player:
 
     def get_data(self) -> dict:
         obj:dict = {}
-        obj['id']:str = self.id
+        obj['id']:str = self.id if self.id != None else ''
         obj['key']:str = self.key
         obj['rating']:int = self.rating
         obj['medals']:Medals = self.medals.get_data()

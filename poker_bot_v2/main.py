@@ -1,7 +1,8 @@
 import os
-from dotenv import load_dotenv
+import json
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
 
 from player import Player
 from medals import Medals
@@ -40,7 +41,20 @@ def main():
         obj:list[str] = []
         for i in range(len(db)):
             obj.append(db[i].get_data())
-        await ctx.send('```' + str(obj).replace(' ', '') + '```')
+        await ctx.send('```' + str(obj).replace(' ', '').replace("\'", "\\\"") + '```')
+
+    @bot.command()
+    async def override(ctx, data):
+        db.clear()
+        obj:dict = json.loads(data)
+        for i in range(len(obj)):
+            id:str = obj[i]['id'] if obj[i]['id'] != '' else None
+            key:str = obj[i]['key']
+            rating:int = obj[i]['rating']
+            medals:Medals = Medals(obj[i]['medals']['gold'], obj[i]['medals']['silver'], obj[i]['medals']['bronze'])
+            player:Player = Player(id, key, rating, medals)
+            db.append(player)
+        await ctx.send('override successful!')
 
     bot.run(TOKEN)
 
