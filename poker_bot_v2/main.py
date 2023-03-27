@@ -64,6 +64,9 @@ def main():
     async def register(ctx, *key_and_id):
         key:str = key_and_id[0]
         id:str = key_and_id[1] if len(key_and_id) > 1 else None
+        if utils.exist_check(db, key):
+            await ctx.send(key + ' is already exist!')
+            return
         player:Player = Player(id, key, 1500, Medals(0, 0, 0))
         db.append(player)
         await ctx.send(key + ' is registered!')
