@@ -1,5 +1,6 @@
 import os
 import json
+import cryptocode
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -10,9 +11,10 @@ import utils
 
 def main():
     
-    # TOKEN取得
+    # 環境変数取得
     load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
     TOKEN = os.environ['DISCORD_BOT_TOKEN']
+    KEY = os.environ['CRYPTO_KEY']
 
     # Botオブジェクト生成
     bot = commands.Bot(command_prefix='./', intents=discord.Intents.all())
@@ -134,14 +136,15 @@ def main():
         obj:list[str] = []
         for i in range(len(db)):
             obj.append(db[i].get_data())
-        await ctx.send('```' + str(obj).replace(' ', '').replace('\'', '\\\"') + '```')
+        raw:str = str(obj).replace(' ', '').replace('\'', '\"')
+        await ctx.send('```' + cryptocode.encrypt(raw, KEY) + '```')
 
 
     # DB上書き
     @bot.command()
     async def override(ctx, data):
         db.clear()
-        obj:dict = json.loads(data)
+        obj:dict = json.loads(cryptocode.decrypt(data, KEY))
         for i in range(len(obj)):
             id:str = obj[i]['id'] if obj[i]['id'] != '' else None
             key:str = obj[i]['key']
