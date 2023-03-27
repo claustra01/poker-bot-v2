@@ -13,6 +13,13 @@ class Medals:
     def get_bronze(self) -> int:
         return self.bronze
     
+    def get_data(self) -> dict:
+        obj:dict = {}
+        obj['gold'] = self.gold
+        obj['silver'] = self.silver
+        obj['bronze'] = self.bronze
+        return obj
+
     def add_gold(self):
         self.gold += 1
 

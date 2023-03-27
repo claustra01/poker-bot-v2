@@ -15,7 +15,7 @@ class Player:
         obj['id']:str = self.id if (type(self.id) != None) else None
         obj['key']:str = self.key
         obj['rating']:int = self.rating
-        obj['medals']:Medals = self.medals
+        obj['medals']:Medals = self.medals.get_data()
         return obj
     
     def set_id(self, id:str):
