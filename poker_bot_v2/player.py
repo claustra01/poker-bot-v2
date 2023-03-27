@@ -35,3 +35,6 @@ class Player:
     
     def set_rating(self, rating:str):
         self.rating = rating
+
+    def set_medals(self, medals:Medals):
+        self.medals = medals

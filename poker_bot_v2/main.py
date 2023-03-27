@@ -64,10 +64,13 @@ def main():
 
     # 結果入力
     @bot.command()
-    async def result(ctx, member, stack, *players):
+    async def result(ctx, member, stack, *players):        
         if int(member) != len(players):
-            print(len(players))
             await ctx.send('missing arguments!')
+            return
+        
+        if len(players) <= 2:
+            await ctx.send('heads up is not supported!')
             return
         
         keys:list[str] = []
@@ -93,6 +96,19 @@ def main():
                     else:
                         rate_adds -= utils.calc_rate_adds(int(stack), opp_rate, rating)
             player.set_rating(round(rating + rate_adds))
+
+        g_player:Player = utils.key_to_player(db, keys[0])
+        g_medals:Medals = g_player.get_medals()
+        g_medals.add_gold()
+        g_player.set_medals(g_medals)
+        s_player:Player = utils.key_to_player(db, keys[1])
+        s_medals:Medals = s_player.get_medals()
+        s_medals.add_silver()
+        s_player.set_medals(s_medals)
+        b_player:Player = utils.key_to_player(db, keys[2])
+        b_medals:Medals = b_player.get_medals()
+        b_medals.add_bronze()
+        b_player.set_medals(b_medals)
         await ctx.send('rating updated!')
 
 
