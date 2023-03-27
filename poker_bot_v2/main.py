@@ -35,6 +35,13 @@ def main():
         player.set_id(id)
         await ctx.send(id + ' is linked!')
 
+    @bot.command()
+    async def export(ctx):
+        obj:list[str] = []
+        for i in range(len(db)):
+            obj.append(db[i].get_data())
+        await ctx.send('```' + str(obj).replace(' ', '') + '```')
+
     bot.run(TOKEN)
 
 if __name__ == '__main__':
