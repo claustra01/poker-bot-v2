@@ -13,6 +13,15 @@ class Player:
     def get_key(self) -> str:
         return self.key
 
+    def get_name(self) -> str:
+        return self.id if self.id != None else self.key
+    
+    def get_rating(self) -> int:
+        return self.rating
+    
+    def get_medals(self) -> Medals:
+        return self.medals
+
     def get_data(self) -> dict:
         obj:dict = {}
         obj['id']:str = self.id if self.id != None else ''

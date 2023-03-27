@@ -28,6 +28,14 @@ def main():
 
     
     # Rating表示
+    @bot.command()
+    async def rating(ctx, id_or_key):
+        key:str = utils.id_to_key(db, id_or_key)
+        player:Player = utils.key_to_player(db, key)
+        if (player == None):
+            await ctx.send(key + ' is not found!')
+            return
+        await ctx.send(player.get_name() + '\'s rating: ' + str(player.get_rating()) + 'pt')
 
 
     # ランキング表示
@@ -35,7 +43,6 @@ def main():
 
     # プレイヤー登録
     @bot.command()
-    @commands.has_role("Promoter")
     async def register(ctx, *key_and_id):
         key:str = key_and_id[0]
         id:str = key_and_id[1] if len(key_and_id) > 1 else None
@@ -46,11 +53,10 @@ def main():
 
     # Discordアカウント紐付け
     @bot.command()
-    @commands.has_role("Promoter")
     async def link(ctx, key, id):
         player:Player = utils.key_to_player(db, key)
         if player == None:
-            await ctx.send(key + " is not found!")
+            await ctx.send(key + ' is not found!')
         player.set_id(id)
         await ctx.send(id + ' is linked!')
 
@@ -60,17 +66,15 @@ def main():
 
     # DB全出力
     @bot.command()
-    @commands.has_role("Promoter")
     async def export(ctx):
         obj:list[str] = []
         for i in range(len(db)):
             obj.append(db[i].get_data())
-        await ctx.send('```' + str(obj).replace(' ', '').replace("\'", "\\\"") + '```')
+        await ctx.send('```' + str(obj).replace(' ', '').replace('\'', '\\\"') + '```')
 
 
     # DB上書き
     @bot.command()
-    @commands.has_role("Promoter")
     async def override(ctx, data):
         db.clear()
         obj:dict = json.loads(data)
