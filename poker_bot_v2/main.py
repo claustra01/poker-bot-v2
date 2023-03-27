@@ -31,10 +31,10 @@ def main():
     @bot.command()
     async def rating(ctx, id_or_key):
         key:str = utils.id_to_key(db, id_or_key)
-        player:Player = utils.key_to_player(db, key)
-        if (player == None):
+        if not utils.exist_check(db, key):
             await ctx.send(key + ' is not found!')
             return
+        player:Player = utils.key_to_player(db, key)
         await ctx.send(player.get_name() + '\'s rating: ' + str(player.get_rating()) + 'pt')
 
 
@@ -54,14 +54,46 @@ def main():
     # Discordアカウント紐付け
     @bot.command()
     async def link(ctx, key, id):
-        player:Player = utils.key_to_player(db, key)
-        if player == None:
+        if not utils.exist_check(db, key):
             await ctx.send(key + ' is not found!')
+            return
+        player:Player = utils.key_to_player(db, key)
         player.set_id(id)
         await ctx.send(id + ' is linked!')
 
 
     # 結果入力
+    @bot.command()
+    async def result(ctx, member, stack, *players):
+        if int(member) != len(players):
+            print(len(players))
+            await ctx.send('missing arguments!')
+            return
+        
+        keys:list[str] = []
+        not_exist:list[str] = []
+        for i in range(len(players)):
+            keys.append(utils.id_to_key(db, players[i]))
+            if not utils.exist_check(db, keys[i]):
+                not_exist.append(keys[i])
+        if not_exist != []:
+            for i in range(len(not_exist)):
+                await ctx.send(not_exist[i] + ' is not found!')
+            return
+        
+        for i in range(len(keys)):
+            player:Player = utils.key_to_player(db, keys[i])
+            rating:int = player.get_rating()
+            rate_adds:float = 0
+            for j in range(len(keys)):
+                if i != j:
+                    opp_rate:int = utils.key_to_player(db, keys[j]).get_rating()
+                    if i < j:
+                        rate_adds += utils.calc_rate_adds(int(stack), rating, opp_rate)
+                    else:
+                        rate_adds -= utils.calc_rate_adds(int(stack), opp_rate, rating)
+            player.set_rating(round(rating + rate_adds))
+        await ctx.send('rating updated!')
 
 
     # DB全出力
