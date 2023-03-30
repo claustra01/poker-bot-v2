@@ -10,7 +10,6 @@ packages = [{include = "poker_bot_v2"}]
 python = "^3.10"
 discord-py = "^2.2.2"
 python-dotenv = "^1.0.0"
-cryptocode = "^0.1"
 
 
 [build-system]
