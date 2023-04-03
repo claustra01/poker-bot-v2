@@ -71,7 +71,7 @@ def main():
                         rate_adds += utils.calc_rate_adds(int(stack), rate, opp_rate)
                     else:
                         rate_adds -= utils.calc_rate_adds(int(stack), opp_rate, rate)
-            rate += round(rate_adds)
+            rate += round(rate_adds) if rate_adds > 0 else round(rate_adds/2)
             if i == 0:
                 first += 1
             if i == 1:
