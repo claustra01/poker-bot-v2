@@ -26,11 +26,16 @@ def main():
     async def register(ctx, *name_and_account):
         name:str = name_and_account[0]
         account:str = name_and_account[1] if len(name_and_account) > 1 else ''
-        res:str = db.create_player(name, account)
-        if res == 'OK':
-            await ctx.send(name + ' is registered!')
-        else:
-            await ctx.send(res)
+        message:str = db.create_player(name, account)
+        await ctx.send(message)
+
+    
+    # Discordアカウント紐付け
+    @bot.command()
+    async def link(ctx, name, account):
+        message:str = db.link_account(name, account)
+        await ctx.send(message)
+        
 
 
     # Bot起動
