@@ -1,14 +1,13 @@
 import os
-import json
+import dotenv
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
 
 def main():
     
     # 環境変数取得
-    load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
-    TOKEN = os.environ['DISCORD_BOT_TOKEN']
+    dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
+    token = os.environ['DISCORD_BOT_TOKEN']
 
     # Botオブジェクト生成
     bot = commands.Bot(command_prefix='./', intents=discord.Intents.all())
@@ -21,7 +20,7 @@ def main():
 
 
     # Bot起動
-    bot.run(TOKEN)
+    bot.run(token)
 
 
 if __name__ == '__main__':
