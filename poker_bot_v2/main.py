@@ -3,6 +3,8 @@ import dotenv
 import discord
 from discord.ext import commands
 
+import db
+
 def main():
     
     # 環境変数取得
@@ -17,6 +19,18 @@ def main():
     @bot.command()
     async def hello(ctx):
         await ctx.send('Hello!')
+
+
+    # プレイヤー登録
+    @bot.command()
+    async def register(ctx, *name_and_account):
+        name:str = name_and_account[0]
+        account:str = name_and_account[1] if len(name_and_account) > 1 else ''
+        res:str = db.create_player(name, account)
+        if res == 'OK':
+            await ctx.send(name + ' is registered!')
+        else:
+            await ctx.send(res)
 
 
     # Bot起動
