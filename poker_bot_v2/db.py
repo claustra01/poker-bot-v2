@@ -15,7 +15,7 @@ backups = db['backups']
 
 
 # accountをnameに変換
-def account_to_name(name_or_account:str):
+def account_to_name(name_or_account:str) -> str:
     player = players.find_one({'account': name_or_account})
     if player:
         return player['name']
@@ -23,7 +23,7 @@ def account_to_name(name_or_account:str):
         return name_or_account
 
 # nameをaccountに変換
-def name_to_account(name:str):
+def name_to_account(name:str) -> str:
     player = players.find_one({'name': name})
     if player['account'] != '':
         return player['account']
@@ -57,6 +57,15 @@ def get_second(name:str) -> int:
 def get_third(name:str) -> int:
     player = players.find_one({'name': name})
     return player['third']
+
+# ランキング取得
+def get_ranking(limit) -> list[dict]:
+    results = list(players.find())
+    for i in range(len(results)-1):
+        for j in range(i+1, len(results)):
+            if results[i]['rate'] < results[j]['rate']:
+                results[i], results[j] = results[j], results[i]
+    return results[:limit]
 
 
 # プレイヤーデータ作成

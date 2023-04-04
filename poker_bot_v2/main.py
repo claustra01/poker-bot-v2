@@ -39,6 +39,16 @@ def main():
             db.name_to_account(name) + '\'s rate: ' + str(rate) + 'pt\n' +
             ':first_place:' * first + ':second_place:' * second + ':third_place:' * third
         )
+    
+
+    # ランキング表示
+    @bot.command()
+    async def ranking(ctx, limit):
+        data:list(dict) = db.get_ranking(min(10, int(limit)))
+        message:str = ''
+        for player in data:
+            message += (db.name_to_account(player['name']) + ' ' + str(player['rate']) + 'pt\n')
+        await ctx.send(message)
 
 
     # プレイヤー登録
