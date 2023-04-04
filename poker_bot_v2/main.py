@@ -80,13 +80,13 @@ def main():
         
         not_exists:list[str] = db.get_undefined_name(names)
         if not_exists != []:
-            for i in range(len(not_exists)):
-                await ctx.send(not_exists[i] + ' is not found!')
+            for not_exist in not_exists:
+                await ctx.send(not_exist + ' is not found!')
             return
         
         rates:list[int] = []
-        for i in range(len(names)):
-            rates.append(db.get_rate(names[i]))
+        for name in names:
+            rates.append(db.get_rate(name))
         for i in range(len(names)):
             rate:int = rates[i]
             first:int = db.get_first(names[i])
