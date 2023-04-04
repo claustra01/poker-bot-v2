@@ -1,7 +1,8 @@
 import os
-import datetime
+import json
 import dotenv
 import pymongo
+from bson.objectid import ObjectId
 
 # DB接続
 dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), '../.env'))
@@ -81,7 +82,6 @@ def create_player(name:str, account:str) -> str:
             'first': 0,
             'second': 0,
             'third': 0,
-            'time': datetime.datetime.utcnow()
         }
         players.insert_one(data)
         return name + ' is registered!'
@@ -125,12 +125,25 @@ def update_player(name:str, rate:int, first:int, second:int, third:int):
 
 
 # バックアップ作成
-def create_backup() -> int:
+def create_backup():
     data:list[dict] = list(players.find())
     backup:dict = {
         'data': str(data),
-        'time': datetime.datetime.utcnow()
     }
-    post_id = backups.insert_one(backup).inserted_id
+    post_id:int = backups.insert_one(backup).inserted_id
     return post_id
 
+
+# バックアップから復元
+def rollback(backup_id:str) -> str:
+    result:str = backups.find_one({'_id': ObjectId(backup_id)})
+    if not result:
+        return 'backup is not found!'
+    else:
+        players.delete_many({})
+        print(result['data'].replace('\'', '\"').replace('ObjectId(', '').replace(')', ''))
+        backup:dict = json.loads(result['data'].replace('\'', '\"').replace('ObjectId(', '').replace(')', ''))
+        for data in backup:
+            data['_id'] = ObjectId(data['_id'])
+            players.insert_one(data)
+        return 'rollback successful!'

@@ -114,9 +114,15 @@ def main():
     # バックアップ作成
     @bot.command()
     async def backup(ctx):
-        backup_id:int = db.create_backup()
-        print(backup_id)
-        await ctx.send('backup id: ' + str(backup_id))
+        backup_id = db.create_backup()
+        await ctx.send('backup id: `' + str(backup_id) + '`')
+
+    
+    # バックアップから復元
+    @bot.command()
+    async def rollback(ctx, backup_id):
+        message:str = db.rollback(backup_id)
+        await ctx.send(message)
 
 
     # Bot起動
