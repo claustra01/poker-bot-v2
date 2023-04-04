@@ -122,3 +122,15 @@ def update_player(name:str, rate:int, first:int, second:int, third:int):
         'third': third
     }}
     players.update_one(query, change)
+
+
+# バックアップ作成
+def create_backup() -> int:
+    data:list[dict] = list(players.find())
+    backup:dict = {
+        'data': str(data),
+        'time': datetime.datetime.utcnow()
+    }
+    post_id = backups.insert_one(backup).inserted_id
+    return post_id
+

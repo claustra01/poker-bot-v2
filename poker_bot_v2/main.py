@@ -111,6 +111,14 @@ def main():
         await ctx.send('rating updated!')
 
 
+    # バックアップ作成
+    @bot.command()
+    async def backup(ctx):
+        backup_id:int = db.create_backup()
+        print(backup_id)
+        await ctx.send('backup id: ' + str(backup_id))
+
+
     # Bot起動
     bot.run(token)
 
