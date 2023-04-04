@@ -14,6 +14,51 @@ players = db['players']
 backups = db['backups']
 
 
+# accountをnameに変換
+def account_to_name(name_or_account:str):
+    player = players.find_one({'account': name_or_account})
+    if player:
+        return player['name']
+    else:
+        return name_or_account
+
+# nameをaccountに変換
+def name_to_account(name:str):
+    player = players.find_one({'name': name})
+    if player['account'] != '':
+        return player['account']
+    else:
+        return name
+
+# プレイヤーが存在しているかチェック
+def exist_check(name:str) -> bool:
+    player:bool = players.find_one({'name': name})
+    if player:
+        return True
+    else:
+        return False
+
+# プレイヤーのレートを取得
+def get_rate(name:str) -> int:
+    player = players.find_one({'name': name})
+    return player['rate']
+
+# プレイヤーの1位回数を取得
+def get_first(name:str) -> int:
+    player = players.find_one({'name': name})
+    return player['first']
+
+# プレイヤーの2位回数を取得
+def get_second(name:str) -> int:
+    player = players.find_one({'name': name})
+    return player['second']
+
+# プレイヤーの3位回数を取得
+def get_third(name:str) -> int:
+    player = players.find_one({'name': name})
+    return player['third']
+
+
 # プレイヤーデータ作成
 def create_player(name:str, account:str) -> str:
     exist_name = players.find_one({'name': name})
@@ -57,25 +102,6 @@ def get_undefined_name(names:tuple) -> list[str]:
             not_exists.append(names[i])
     return not_exists
 
-# プレイヤーのレートを取得
-def get_rate(name:str) -> int:
-    player = players.find_one({'name': name})
-    return player['rate']
-
-# プレイヤーの1位回数を取得
-def get_first(name:str) -> int:
-    player = players.find_one({'name': name})
-    return player['first']
-
-# プレイヤーの2位回数を取得
-def get_second(name:str) -> int:
-    player = players.find_one({'name': name})
-    return player['second']
-
-# プレイヤーの3位回数を取得
-def get_third(name:str) -> int:
-    player = players.find_one({'name': name})
-    return player['third']
 
 # プレイヤーデータを更新
 def update_player(name:str, rate:int, first:int, second:int, third:int):

@@ -22,6 +22,25 @@ def main():
         await ctx.send('Hello!')
 
 
+    # レート表示
+    @bot.command()
+    async def rate(ctx, name_or_account):
+        name:str = db.account_to_name(name_or_account)
+        print(name)
+        if not db.exist_check(name):
+            await ctx.send(name + ' is not found!')
+            return
+
+        rate:int = db.get_rate(name)
+        first:int = db.get_first(name)
+        second:int = db.get_second(name)
+        third:int = db.get_third(name)
+        await ctx.send(
+            db.name_to_account(name) + '\'s rate: ' + str(rate) + 'pt\n' +
+            ':first_place:' * first + ':second_place:' * second + ':third_place:' * third
+        )
+
+
     # プレイヤー登録
     @bot.command()
     async def register(ctx, *name_and_account):
@@ -71,7 +90,7 @@ def main():
                         rate_adds += utils.calc_rate_adds(int(stack), rate, opp_rate)
                     else:
                         rate_adds -= utils.calc_rate_adds(int(stack), opp_rate, rate)
-            rate += round(rate_adds) if rate_adds > 0 else round(rate_adds/2)
+            rate += round(rate_adds) if rate_adds > 0 else round(rate_adds / 2)
             if i == 0:
                 first += 1
             if i == 1:
