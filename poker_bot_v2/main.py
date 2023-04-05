@@ -26,7 +26,6 @@ def main():
     @bot.command()
     async def rate(ctx, name_or_account):
         name:str = db.account_to_name(name_or_account)
-        print(name)
         if not db.exist_check(name):
             await ctx.send(name + ' is not found!')
             return
