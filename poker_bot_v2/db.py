@@ -45,6 +45,11 @@ def get_rate(name:str) -> int:
     player = players.find_one({'name': name})
     return player['rate']
 
+# プレイヤーの最高レートを取得
+def get_max_rate(name:str) -> int:
+    player = players.find_one({'name': name})
+    return player['max_rate']
+
 # プレイヤーの参加回数を取得
 def get_game(name:str) -> int:
     player = players.find_one({'name': name})
@@ -85,10 +90,11 @@ def create_player(name:str, account:str) -> str:
             'name': name,
             'account': account,
             'rate': 1500,
+            'max_rate': 1500,
             'game': 0,
             'first': 0,
             'second': 0,
-            'third': 0,
+            'third': 0
         }
         players.insert_one(data)
         return name + ' is registered!'
@@ -120,10 +126,11 @@ def get_undefined_name(names:tuple) -> list[str]:
 
 
 # プレイヤーデータを更新
-def update_player(name:str, rate:int, game:int, first:int, second:int, third:int):
+def update_player(name:str, rate:int, max_rate:int, game:int, first:int, second:int, third:int):
     query:dict = {'name': name}
     change:dict = {'$set': {
         'rate': rate,
+        'max_rate': max_rate,
         'game': game,
         'first': first,
         'second': second,

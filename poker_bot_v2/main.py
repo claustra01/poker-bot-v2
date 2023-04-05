@@ -31,12 +31,13 @@ def main():
             return
 
         rate:int = db.get_rate(name)
+        max_rate:int = db.get_max_rate(name)
         game:int = db.get_game(name)
         first:int = db.get_first(name)
         second:int = db.get_second(name)
         third:int = db.get_third(name)
         await ctx.send(
-            db.name_to_account(name) + '\'s rate: ' + str(rate) + 'pt / ' + str(game) + 'game\n' +
+            db.name_to_account(name) + '\'s rate: ' + str(rate) + 'pt (max: ' + str(max_rate) + 'pt) / ' + str(game) + 'game\n' +
             ':first_place:' * first + ':second_place:' * second + ':third_place:' * third
         )
     
@@ -89,6 +90,7 @@ def main():
             rates.append(db.get_rate(name))
         for i in range(len(names)):
             rate:int = rates[i]
+            max_rate:int = db.get_max_rate(names[i])
             game:int = db.get_game(names[i])
             first:int = db.get_first(names[i])
             second:int = db.get_second(names[i])
@@ -102,6 +104,8 @@ def main():
                     else:
                         rate_adds -= utils.calc_rate_adds(int(stack), opp_rate, rate)
             rate += round(rate_adds) if rate_adds > 0 else round(rate_adds / 2)
+            if rate > max_rate:
+                max_rate = rate
             game += 1
             if i == 0:
                 first += 1
@@ -109,7 +113,7 @@ def main():
                 second += 1
             if i == 2:
                 third += 1
-            db.update_player(names[i], rate, game, first, second, third)
+            db.update_player(names[i], rate, max_rate, game, first, second, third)
         await ctx.send('rating updated!')
 
 
