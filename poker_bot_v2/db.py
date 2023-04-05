@@ -1,5 +1,6 @@
 import os
 import json
+import datetime
 import dotenv
 import pymongo
 from bson.objectid import ObjectId
@@ -136,6 +137,7 @@ def create_backup():
     data:list[dict] = list(players.find())
     backup:dict = {
         'data': str(data),
+        'time': datetime.datetime.utcnow()
     }
     post_id:int = backups.insert_one(backup).inserted_id
     return post_id
@@ -148,7 +150,6 @@ def rollback(backup_id:str) -> str:
         return 'backup is not found!'
     else:
         players.delete_many({})
-        print(result['data'].replace('\'', '\"').replace('ObjectId(', '').replace(')', ''))
         backup:dict = json.loads(result['data'].replace('\'', '\"').replace('ObjectId(', '').replace(')', ''))
         for data in backup:
             data['_id'] = ObjectId(data['_id'])
