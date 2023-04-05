@@ -90,7 +90,7 @@ def main():
             rates.append(db.get_rate(name))
         for i in range(len(names)):
             rate:int = rates[i]
-            game:int = db.get_game(name)
+            game:int = db.get_game(names[i])
             first:int = db.get_first(names[i])
             second:int = db.get_second(names[i])
             third:int = db.get_third(names[i])
